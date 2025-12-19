@@ -1,45 +1,10 @@
 name = "solarsys"
 compatibility_date = "2024-01-01"
-compatibility_flags = ["nodejs_compat"]
 
-[env.production]
-name = "solarsys"
-routes = [
-  { pattern = "solarsys.clubemkt.digital", custom_domain = true }
-]
+# Pages configuration - this tells Wrangler it's a Pages project
+[assets]
+directory = "./dist"
 
-[env.preview]
-name = "solarsys-preview"
-
-# Pages configuration
-pages_build_output_dir = "dist"
-
-# Environment variables (these will be set via Cloudflare dashboard or CLI)
+# Environment variables will be set via Cloudflare dashboard
 # VITE_SUPABASE_URL = "your-supabase-url"
 # VITE_SUPABASE_ANON_KEY = "your-supabase-anon-key"
-
-# Functions configuration for API routes
-[[env.production.services]]
-binding = "SUPABASE"
-service = "supabase"
-
-[[env.preview.services]]
-binding = "SUPABASE"
-service = "supabase"
-
-# Headers for security and performance
-[env.production.headers]
-"/*" = [
-  { name = "X-Frame-Options", value = "DENY" },
-  { name = "X-Content-Type-Options", value = "nosniff" },
-  { name = "Referrer-Policy", value = "strict-origin-when-cross-origin" },
-  { name = "Permissions-Policy", value = "camera=(), microphone=(), geolocation=()" }
-]
-
-[env.preview.headers]
-"/*" = [
-  { name = "X-Frame-Options", value = "DENY" },
-  { name = "X-Content-Type-Options", value = "nosniff" },
-  { name = "Referrer-Policy", value = "strict-origin-when-cross-origin" },
-  { name = "Permissions-Policy", value = "camera=(), microphone=(), geolocation=()" }
-]
