@@ -1,8 +1,9 @@
 name = "solarsys"
+main = "src/worker.js"
 compatibility_date = "2024-01-01"
 
-# Pages configuration
-pages_build_output_dir = "dist"
+[site]
+bucket = "./dist"
 
 # Environment variables will be set via Cloudflare dashboard
 # VITE_SUPABASE_URL = "your-supabase-url"
