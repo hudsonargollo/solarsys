@@ -3,9 +3,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { initializeUTMTracking } from './lib/utm'
 import { performanceMonitor, prefetchCriticalResources } from './lib/performance'
 import { ErrorBoundary } from './components/ErrorBoundary'
-import { LazyPainel, LazyResultado, LazyPageWrapper } from './components/LazyComponents'
+import { LazyPainel, LazyPageWrapper } from './components/LazyComponents'
 import Home from './pages/Home'
-import Simulador from './pages/Simulador'
+import SimuladorSimple from './pages/SimuladorSimple'
+import ResultadoSimple from './pages/ResultadoSimple'
 
 function App() {
   useEffect(() => {
@@ -29,15 +30,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/simulador" element={<Simulador />} />
-          <Route 
-            path="/resultado" 
-            element={
-              <LazyPageWrapper>
-                <LazyResultado />
-              </LazyPageWrapper>
-            } 
-          />
+          <Route path="/simulador" element={<SimuladorSimple />} />
+          <Route path="/resultado" element={<ResultadoSimple />} />
           <Route 
             path="/painel" 
             element={
