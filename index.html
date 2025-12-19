@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://brasilapi.com.br">
+    
+    <!-- Favicon and app icons -->
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icon-16x16.png">
+    
+    <!-- PWA manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Viewport and mobile optimization -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="SolarSys">
+    
+    <!-- Theme colors -->
+    <meta name="theme-color" content="#2E7D32">
+    <meta name="msapplication-TileColor" content="#2E7D32">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+    
+    <!-- SEO and social media -->
+    <title>SolarSys - Simulador Solar Brasileiro</title>
+    <meta name="description" content="Plataforma de qualificação de leads para energia solar no Brasil. Simule sua economia e descubra se solar é viável para sua casa.">
+    <meta name="keywords" content="energia solar, simulador solar, economia energia, painéis solares, Brasil">
+    <meta name="author" content="SolarSys">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://solarsys.clubemkt.digital/">
+    <meta property="og:title" content="SolarSys - Simulador Solar Brasileiro">
+    <meta property="og:description" content="Descubra se a energia solar é ideal para sua casa através de uma experiência visual e intuitiva">
+    <meta property="og:image" content="/og-image.png">
+    <meta property="og:locale" content="pt_BR">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://solarsys.clubemkt.digital/">
+    <meta property="twitter:title" content="SolarSys - Simulador Solar Brasileiro">
+    <meta property="twitter:description" content="Descubra se a energia solar é ideal para sua casa através de uma experiência visual e intuitiva">
+    <meta property="twitter:image" content="/og-image.png">
+    
+    <!-- Performance hints -->
+    <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <!-- Critical CSS inlined for faster rendering -->
+    <style>
+      /* Critical CSS for initial render */
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #ffffff;
+      }
+      
+      #root {
+        min-height: 100vh;
+      }
+      
+      /* Loading spinner for initial load */
+      .initial-loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+      }
+      
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #2E7D32;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Initial loading indicator -->
+    <div id="initial-loading" class="initial-loading">
+      <div class="spinner"></div>
+    </div>
+    
+    <div id="root"></div>
+    
+    <!-- Remove loading indicator when React loads -->
+    <script>
+      // Remove initial loading when React takes over
+      window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          const loading = document.getElementById('initial-loading');
+          if (loading) {
+            loading.style.display = 'none';
+          }
+        }, 100);
+      });
+    </script>
+    
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
