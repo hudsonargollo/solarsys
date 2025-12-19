@@ -1,7 +1,8 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { getSessionId } from '../lib/session'
-import { UTMParameters, getCurrentUTMParameters } from '../lib/utm'
+import type { UTMParameters } from '../lib/utm'
+import { getCurrentUTMParameters } from '../lib/utm'
 
 // Simulador step definitions
 export const SIMULADOR_STEPS = {
@@ -76,17 +77,37 @@ export interface SimuladorState {
 }
 
 // Initial state
-const initialState = {
-  currentStep: SIMULADOR_STEPS.LOCATION,
-  completedSteps: new Set<SimuladorStep>(),
-  leadData: {},
-  sessionId: getSessionId(),
-  utmParameters: getCurrentUTMParameters(),
-  stepValidation: {
-    [SIMULADOR_STEPS.LOCATION]: false,
-    [SIMULADOR_STEPS.CONSUMPTION]: false,
-    [SIMULADOR_STEPS.TECHNICAL_FIT]: false,
-    [SIMULADOR_STEPS.CONTACT]: false,
+const getInitialState = () => {
+  try {
+    return {
+      currentStep: SIMULADOR_STEPS.LOCATION,
+      completedSteps: new Set<SimuladorStep>(),
+      leadData: {},
+      sessionId: getSessionId(),
+      utmParameters: getCurrentUTMParameters(),
+      stepValidation: {
+        [SIMULADOR_STEPS.LOCATION]: false,
+        [SIMULADOR_STEPS.CONSUMPTION]: false,
+        [SIMULADOR_STEPS.TECHNICAL_FIT]: false,
+        [SIMULADOR_STEPS.CONTACT]: false,
+      }
+    }
+  } catch (error) {
+    console.error('Error initializing simulador state:', error)
+    // Fallback state
+    return {
+      currentStep: SIMULADOR_STEPS.LOCATION,
+      completedSteps: new Set<SimuladorStep>(),
+      leadData: {},
+      sessionId: `fallback-${Date.now()}`,
+      utmParameters: {},
+      stepValidation: {
+        [SIMULADOR_STEPS.LOCATION]: false,
+        [SIMULADOR_STEPS.CONSUMPTION]: false,
+        [SIMULADOR_STEPS.TECHNICAL_FIT]: false,
+        [SIMULADOR_STEPS.CONTACT]: false,
+      }
+    }
   }
 }
 
@@ -118,7 +139,7 @@ const stepValidators = {
 export const useSimuladorStore = create<SimuladorState>()(
   persist(
     (set, get) => ({
-      ...initialState,
+      ...getInitialState(),
       SIMULADOR_STEPS, // Add SIMULADOR_STEPS to the store
       
       setCurrentStep: (step: SimuladorStep) => {
@@ -197,11 +218,29 @@ export const useSimuladorStore = create<SimuladorState>()(
       },
       
       resetSimulador: () => {
-        set({
-          ...initialState,
-          sessionId: getSessionId(), // Generate new session ID
-          utmParameters: getCurrentUTMParameters() // Preserve UTM parameters across reset
-        })
+        try {
+          set({
+            ...getInitialState(),
+            sessionId: getSessionId(), // Generate new session ID
+            utmParameters: getCurrentUTMParameters() // Preserve UTM parameters across reset
+          })
+        } catch (error) {
+          console.error('Error resetting simulador:', error)
+          // Fallback reset
+          set({
+            currentStep: SIMULADOR_STEPS.LOCATION,
+            completedSteps: new Set<SimuladorStep>(),
+            leadData: {},
+            sessionId: `fallback-${Date.now()}`,
+            utmParameters: {},
+            stepValidation: {
+              [SIMULADOR_STEPS.LOCATION]: false,
+              [SIMULADOR_STEPS.CONSUMPTION]: false,
+              [SIMULADOR_STEPS.TECHNICAL_FIT]: false,
+              [SIMULADOR_STEPS.CONTACT]: false,
+            }
+          })
+        }
       },
       
       getProgress: () => {
@@ -218,27 +257,40 @@ export const useSimuladorStore = create<SimuladorState>()(
     }),
     {
       name: 'simulador-storage',
-      partialize: (state) => ({
-        leadData: state.leadData,
-        sessionId: state.sessionId,
-        currentStep: state.currentStep,
-        completedSteps: Array.from(state.completedSteps), // Convert Set to Array for serialization
-        utmParameters: state.utmParameters,
-      }),
-      onRehydrateStorage: () => (state) => {
-        if (state) {
-          // Convert Array back to Set after rehydration
-          state.completedSteps = new Set(state.completedSteps as unknown as SimuladorStep[])
-          
-          // Recalculate validation state
-          const newStepValidation = {
-            [SIMULADOR_STEPS.LOCATION]: stepValidators[SIMULADOR_STEPS.LOCATION](state.leadData),
-            [SIMULADOR_STEPS.CONSUMPTION]: stepValidators[SIMULADOR_STEPS.CONSUMPTION](state.leadData),
-            [SIMULADOR_STEPS.TECHNICAL_FIT]: stepValidators[SIMULADOR_STEPS.TECHNICAL_FIT](state.leadData),
-            [SIMULADOR_STEPS.CONTACT]: stepValidators[SIMULADOR_STEPS.CONTACT](state.leadData),
+      partialize: (state) => {
+        try {
+          return {
+            leadData: state.leadData,
+            sessionId: state.sessionId,
+            currentStep: state.currentStep,
+            completedSteps: Array.from(state.completedSteps), // Convert Set to Array for serialization
+            utmParameters: state.utmParameters,
           }
-          
-          state.stepValidation = newStepValidation
+        } catch (error) {
+          console.error('Error serializing simulador state:', error)
+          return {}
+        }
+      },
+      onRehydrateStorage: () => (state) => {
+        try {
+          if (state) {
+            // Convert Array back to Set after rehydration
+            state.completedSteps = new Set(state.completedSteps as unknown as SimuladorStep[])
+            
+            // Recalculate validation state
+            const newStepValidation = {
+              [SIMULADOR_STEPS.LOCATION]: stepValidators[SIMULADOR_STEPS.LOCATION](state.leadData),
+              [SIMULADOR_STEPS.CONSUMPTION]: stepValidators[SIMULADOR_STEPS.CONSUMPTION](state.leadData),
+              [SIMULADOR_STEPS.TECHNICAL_FIT]: stepValidators[SIMULADOR_STEPS.TECHNICAL_FIT](state.leadData),
+              [SIMULADOR_STEPS.CONTACT]: stepValidators[SIMULADOR_STEPS.CONTACT](state.leadData),
+            }
+            
+            state.stepValidation = newStepValidation
+          }
+        } catch (error) {
+          console.error('Error rehydrating simulador state:', error)
+          // Reset to initial state on error
+          Object.assign(state || {}, getInitialState())
         }
       }
     }
