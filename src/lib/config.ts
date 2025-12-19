@@ -48,9 +48,7 @@ export const config: AppConfig = {
     anonKey: getEnvVar('VITE_SUPABASE_ANON_KEY', 'placeholder-key'),
   },
   api: {
-    brasilApiUrl: isProduction 
-      ? '/api/cep' // Use Cloudflare Function in production
-      : 'https://brasilapi.com.br/api/cep/v1', // Direct API in development
+    brasilApiUrl: 'https://brasilapi.com.br/api/cep/v1', // Direct API for both environments
     timeout: 5000,
   },
   features: {
