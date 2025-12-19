@@ -174,7 +174,7 @@ For issues and questions:
 
 ---
 
-Built with ❤️ for the Brazilian solar market
+Built with ❤️ for the Brazilian solar market 🇧🇷
 
 🚀 **Status**: Ready for deployment!
 
