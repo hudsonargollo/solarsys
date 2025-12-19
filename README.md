@@ -1,4 +1,4 @@
-# SolarSys - Solar Lead Acquisition Platform
+# SolarSys - Solar Lead Platform - Solar Lead Acquisition Platform
 
 A next-generation solar lead acquisition platform designed for the Brazilian market. Built with React, TypeScript, and deployed on Cloudflare Pages with Supabase backend.
 
