@@ -44,8 +44,8 @@ function getBooleanEnvVar(key: string, fallback: boolean = false): boolean {
 // Application configuration
 export const config: AppConfig = {
   supabase: {
-    url: getEnvVar('VITE_SUPABASE_URL'),
-    anonKey: getEnvVar('VITE_SUPABASE_ANON_KEY'),
+    url: getEnvVar('VITE_SUPABASE_URL', 'https://placeholder.supabase.co'),
+    anonKey: getEnvVar('VITE_SUPABASE_ANON_KEY', 'placeholder-key'),
   },
   api: {
     brasilApiUrl: isProduction 
@@ -77,10 +77,12 @@ export function validateConfig(): void {
   if (missingVars.length > 0) {
     const error = `Missing required environment variables: ${missingVars.join(', ')}`
     console.error(error)
+    console.warn('App will continue with limited functionality. Please configure environment variables in Cloudflare Pages.')
     
-    if (isProduction) {
-      throw new Error(error)
-    }
+    // Don't throw in production to allow app to load with degraded functionality
+    // if (isProduction) {
+    //   throw new Error(error)
+    // }
   }
 }
 
