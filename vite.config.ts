@@ -17,7 +17,7 @@ export default defineConfig({
   },
   build: {
     // Optimize bundle size
-    target: 'es2015',
+    target: 'es2020',
     minify: 'terser',
     terserOptions: {
       compress: {
