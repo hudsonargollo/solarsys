@@ -7,7 +7,11 @@ const SESSION_KEY = 'solarsys_session_id'
  */
 export function generateSessionId(): string {
   const sessionId = uuidv4()
-  localStorage.setItem(SESSION_KEY, sessionId)
+  try {
+    localStorage.setItem(SESSION_KEY, sessionId)
+  } catch (error) {
+    console.warn('localStorage not available, session will not persist')
+  }
   return sessionId
 }
 
@@ -15,25 +19,41 @@ export function generateSessionId(): string {
  * Get the current session ID from localStorage, or generate a new one
  */
 export function getSessionId(): string {
-  let sessionId = localStorage.getItem(SESSION_KEY)
-  
-  if (!sessionId) {
-    sessionId = generateSessionId()
+  try {
+    let sessionId = localStorage.getItem(SESSION_KEY)
+    
+    if (!sessionId) {
+      sessionId = generateSessionId()
+    }
+    
+    return sessionId
+  } catch (error) {
+    // Fallback if localStorage is not available
+    console.warn('localStorage not available, using temporary session ID')
+    return uuidv4()
   }
-  
-  return sessionId
 }
 
 /**
  * Clear the current session ID
  */
 export function clearSession(): void {
-  localStorage.removeItem(SESSION_KEY)
+  try {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(SESSION_KEY)
+    }
+  } catch (error) {
+    console.warn('Could not clear session from localStorage')
+  }
 }
 
 /**
  * Check if a session ID exists
  */
 export function hasSession(): boolean {
-  return localStorage.getItem(SESSION_KEY) !== null
+  try {
+    return typeof window !== 'undefined' && localStorage.getItem(SESSION_KEY) !== null
+  } catch (error) {
+    return false
+  }
 }

@@ -18,7 +18,7 @@ export async function insertLead(
       console.warn('Supabase not configured - lead data will not be saved')
       // Return a mock lead object for development/demo purposes
       return {
-        id: crypto.randomUUID(),
+        id: `mock-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         created_at: new Date().toISOString(),
         session_id: getSessionId(),
         status: 'new',
