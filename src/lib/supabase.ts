@@ -2,24 +2,35 @@ import { createClient } from '@supabase/supabase-js'
 import { Database } from '../types/database.types'
 import { supabaseConfig } from './config'
 
-export const supabase = createClient<Database>(
-  supabaseConfig.url, 
-  supabaseConfig.anonKey,
-  {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-    },
-    db: {
-      schema: 'public',
-    },
-    global: {
-      headers: {
-        'x-application-name': 'solarsys',
-      },
-    },
-  }
-)
+// Check if Supabase is properly configured
+const isSupabaseConfigured = 
+  supabaseConfig.url !== 'https://placeholder.supabase.co' && 
+  supabaseConfig.anonKey !== 'placeholder-key' &&
+  supabaseConfig.url.includes('supabase.co')
+
+export const supabase = isSupabaseConfigured 
+  ? createClient<Database>(
+      supabaseConfig.url, 
+      supabaseConfig.anonKey,
+      {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+        },
+        db: {
+          schema: 'public',
+        },
+        global: {
+          headers: {
+            'x-application-name': 'solarsys',
+          },
+        },
+      }
+    )
+  : null // Return null if not configured
+
+// Helper function to check if Supabase is available
+export const isSupabaseAvailable = () => supabase !== null
 
 // Database types
 export type Lead = Database['public']['Tables']['leads']['Row']

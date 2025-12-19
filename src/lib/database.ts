@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { supabase, isSupabaseAvailable } from './supabase'
 import type { Lead, LeadInsert, HSPData } from './supabase'
 import { getSessionId } from './session'
 import type { UTMParameters } from './utm'
@@ -13,6 +13,24 @@ export async function insertLead(
   utmParameters?: UTMParameters
 ): Promise<Lead | null> {
   try {
+    // Check if Supabase is available
+    if (!isSupabaseAvailable()) {
+      console.warn('Supabase not configured - lead data will not be saved')
+      // Return a mock lead object for development/demo purposes
+      return {
+        id: crypto.randomUUID(),
+        created_at: new Date().toISOString(),
+        session_id: getSessionId(),
+        status: 'new',
+        ...leadData,
+        utm_source: utmParameters?.utm_source || null,
+        utm_medium: utmParameters?.utm_medium || null,
+        utm_campaign: utmParameters?.utm_campaign || null,
+        disqualification_reason: null,
+        warnings: null
+      } as Lead
+    }
+
     // Validate required fields
     const validationErrors = [
       validateInput(leadData.name, 'required'),
@@ -29,7 +47,7 @@ export async function insertLead(
 
     const sessionId = getSessionId()
     
-    const { data, error } = await supabase
+    const { data, error } = await supabase!
       .from('leads')
       .insert({
         ...leadData,
@@ -146,7 +164,21 @@ export async function safeUpdateLeadStatus(leadId: string, status: Lead['status'
  * Get HSP value for a given state
  */
 export async function getHSPValue(state: string): Promise<number | null> {
-  const { data, error } = await supabase
+  // Check if Supabase is available
+  if (!isSupabaseAvailable()) {
+    console.warn('Supabase not configured - using fallback HSP values')
+    // Return fallback HSP values for demo purposes
+    const fallbackHSP: Record<string, number> = {
+      'AC': 4.5, 'AL': 5.2, 'AP': 4.8, 'AM': 4.3, 'BA': 5.8, 'CE': 5.9,
+      'DF': 5.4, 'ES': 5.1, 'GO': 5.3, 'MA': 5.5, 'MT': 5.4, 'MS': 5.2,
+      'MG': 5.3, 'PA': 4.9, 'PB': 5.7, 'PR': 4.8, 'PE': 5.6, 'PI': 5.8,
+      'RJ': 4.9, 'RN': 5.8, 'RS': 4.6, 'RO': 4.4, 'RR': 4.7, 'SC': 4.7,
+      'SP': 5.0, 'SE': 5.4, 'TO': 5.1
+    }
+    return fallbackHSP[state.toUpperCase()] || 5.0
+  }
+
+  const { data, error } = await supabase!
     .from('hsp_data')
     .select('hsp_value')
     .eq('state', state.toUpperCase())
