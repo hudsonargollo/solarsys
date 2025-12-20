@@ -16,7 +16,7 @@ interface FormData {
 export default function SimuladorSimple() {
   const navigate = useNavigate()
   const [step, setStep] = useState(0)
-  const [formData, setFormData] = useState<Partial<FormData>>({})
+  const [formData, setFormData] = useState<Partial<FormData>>({ billValue: 150 })
   const [isLoadingCep, setIsLoadingCep] = useState(false)
   const [cepError, setCepError] = useState('')
 
@@ -140,35 +140,107 @@ export default function SimuladorSimple() {
 
       case 1:
         return (
-          <div className="space-y-6">
+          <div className="space-y-8">
             <h2 className="text-2xl font-bold text-gray-900">Consumo de Energia</h2>
+            
+            {/* Bill Value Slider */}
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Valor da conta de luz (R$)
-                </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Valor da conta de luz
+              </label>
+              <div className="px-4">
+                <div className="flex justify-between text-sm text-gray-500 mb-2">
+                  <span>R$ 50</span>
+                  <span className="text-2xl font-bold text-green-600">
+                    R$ {formData.billValue || 150}
+                  </span>
+                  <span>R$ 1000+</span>
+                </div>
                 <input
-                  type="number"
-                  value={formData.billValue || ''}
+                  type="range"
+                  min="50"
+                  max="1000"
+                  step="10"
+                  value={formData.billValue || 150}
                   onChange={(e) => updateFormData({ billValue: Number(e.target.value) })}
-                  placeholder="150"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                  style={{
+                    background: `linear-gradient(to right, #16a34a 0%, #16a34a ${((formData.billValue || 150) - 50) / (1000 - 50) * 100}%, #e5e7eb ${((formData.billValue || 150) - 50) / (1000 - 50) * 100}%, #e5e7eb 100%)`
+                  }}
                 />
+                <div className="flex justify-between text-xs text-gray-400 mt-1">
+                  <span>Baixo</span>
+                  <span>Médio</span>
+                  <span>Alto</span>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Tipo de conexão
-                </label>
-                <select
-                  value={formData.connectionType || ''}
-                  onChange={(e) => updateFormData({ connectionType: e.target.value as 'mono' | 'bi' | 'tri' })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                >
-                  <option value="">Selecione o tipo</option>
-                  <option value="mono">Monofásico</option>
-                  <option value="bi">Bifásico</option>
-                  <option value="tri">Trifásico</option>
-                </select>
+            </div>
+
+            {/* Connection Type Buttons */}
+            <div className="space-y-4">
+              <label className="block text-sm font-medium text-gray-700 mb-4">
+                Tipo de conexão
+              </label>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[
+                  { 
+                    value: 'mono', 
+                    label: 'Monofásico',
+                    description: 'Residências pequenas',
+                    icon: (
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    )
+                  },
+                  { 
+                    value: 'bi', 
+                    label: 'Bifásico',
+                    description: 'Residências médias',
+                    icon: (
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4-4m0 0l-4-4m4 4H3" />
+                      </svg>
+                    )
+                  },
+                  { 
+                    value: 'tri', 
+                    label: 'Trifásico',
+                    description: 'Residências grandes',
+                    icon: (
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4-4m0 0l-4-4m4 4H3" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                      </svg>
+                    )
+                  }
+                ].map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => updateFormData({ connectionType: option.value as 'mono' | 'bi' | 'tri' })}
+                    className={`p-6 rounded-lg border-2 transition-all duration-300 hover:scale-105 ${
+                      formData.connectionType === option.value
+                        ? 'border-green-500 bg-green-50 text-green-700 shadow-lg'
+                        : 'border-gray-200 bg-white text-gray-600 hover:border-green-300'
+                    }`}
+                  >
+                    <div className={`flex flex-col items-center space-y-3 ${
+                      formData.connectionType === option.value ? 'animate-pulse' : ''
+                    }`}>
+                      <div className={`transition-colors duration-300 ${
+                        formData.connectionType === option.value ? 'text-green-600' : 'text-gray-400'
+                      }`}>
+                        {option.icon}
+                      </div>
+                      <div className="text-center">
+                        <div className="font-semibold">{option.label}</div>
+                        <div className="text-sm opacity-75">{option.description}</div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
           </div>
@@ -176,24 +248,82 @@ export default function SimuladorSimple() {
 
       case 2:
         return (
-          <div className="space-y-6">
+          <div className="space-y-8">
             <h2 className="text-2xl font-bold text-gray-900">Tipo de Telhado</h2>
+            
+            {/* Roof Type Buttons */}
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Material do telhado
-                </label>
-                <select
-                  value={formData.roofType || ''}
-                  onChange={(e) => updateFormData({ roofType: e.target.value as 'clay' | 'metal' | 'fiber' | 'slab' })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                >
-                  <option value="">Selecione o material</option>
-                  <option value="clay">Telha de barro</option>
-                  <option value="metal">Telha metálica</option>
-                  <option value="fiber">Fibrocimento</option>
-                  <option value="slab">Laje</option>
-                </select>
+              <label className="block text-sm font-medium text-gray-700 mb-4">
+                Material do telhado
+              </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  { 
+                    value: 'clay', 
+                    label: 'Telha de Barro',
+                    description: 'Tradicional e resistente',
+                    icon: (
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4" />
+                      </svg>
+                    )
+                  },
+                  { 
+                    value: 'metal', 
+                    label: 'Telha Metálica',
+                    description: 'Moderna e durável',
+                    icon: (
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                    )
+                  },
+                  { 
+                    value: 'fiber', 
+                    label: 'Fibrocimento',
+                    description: 'Econômica e prática',
+                    icon: (
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                      </svg>
+                    )
+                  },
+                  { 
+                    value: 'slab', 
+                    label: 'Laje',
+                    description: 'Estrutura plana',
+                    icon: (
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                      </svg>
+                    )
+                  }
+                ].map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => updateFormData({ roofType: option.value as 'clay' | 'metal' | 'fiber' | 'slab' })}
+                    className={`p-6 rounded-lg border-2 transition-all duration-300 hover:scale-105 ${
+                      formData.roofType === option.value
+                        ? 'border-green-500 bg-green-50 text-green-700 shadow-lg'
+                        : 'border-gray-200 bg-white text-gray-600 hover:border-green-300'
+                    }`}
+                  >
+                    <div className={`flex flex-col items-center space-y-3 ${
+                      formData.roofType === option.value ? 'animate-pulse' : ''
+                    }`}>
+                      <div className={`transition-colors duration-300 ${
+                        formData.roofType === option.value ? 'text-green-600' : 'text-gray-400'
+                      }`}>
+                        {option.icon}
+                      </div>
+                      <div className="text-center">
+                        <div className="font-semibold">{option.label}</div>
+                        <div className="text-sm opacity-75">{option.description}</div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
           </div>
@@ -266,6 +396,42 @@ export default function SimuladorSimple() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          .slider::-webkit-slider-thumb {
+            appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #16a34a;
+            cursor: pointer;
+            border: 3px solid #ffffff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease-in-out;
+          }
+          
+          .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4);
+          }
+          
+          .slider::-moz-range-thumb {
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #16a34a;
+            cursor: pointer;
+            border: 3px solid #ffffff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease-in-out;
+          }
+          
+          .slider::-moz-range-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4);
+          }
+        `
+      }} />
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
           {/* Header */}
