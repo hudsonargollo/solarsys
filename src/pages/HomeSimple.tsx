@@ -211,7 +211,7 @@ export default function HomeSimple() {
                   <motion.img
                     src={isotecKaka}
                     alt="ISOTEC Kaka - Mascote da Energia Solar"
-                    className="w-80 h-80 object-contain drop-shadow-2xl"
+                    className="w-96 h-96 object-contain drop-shadow-2xl"
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 1, delay: 0.6 }}
