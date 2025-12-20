@@ -194,7 +194,7 @@ export default function HomeSimple() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              <div className="relative bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-3xl p-12 aspect-square flex items-center justify-center">
+              <div className="relative bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-3xl p-6 aspect-square flex items-center justify-center">
                 {/* ISOTEC Kaka Character */}
                 <motion.div 
                   className="relative z-10"
@@ -211,7 +211,7 @@ export default function HomeSimple() {
                   <motion.img
                     src={isotecKaka}
                     alt="ISOTEC Kaka - Mascote da Energia Solar"
-                    className="w-[500px] h-[500px] object-contain drop-shadow-2xl"
+                    className="w-[600px] h-[600px] object-contain drop-shadow-2xl"
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 1, delay: 0.6 }}
