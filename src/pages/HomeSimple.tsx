@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { Sun, Moon, Zap, Shield, TrendingUp, Leaf, Home, Users } from 'lucide-react'
+import isotecKaka from '../assets/isotec-kaka.png'
 
 export default function HomeSimple() {
   const [darkMode, setDarkMode] = useState(false)
@@ -194,7 +195,7 @@ export default function HomeSimple() {
               transition={{ duration: 0.8, delay: 0.4 }}
             >
               <div className="relative bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-3xl p-12 aspect-square flex items-center justify-center">
-                {/* Mascot Character */}
+                {/* ISOTEC Kaka Character */}
                 <motion.div 
                   className="relative z-10"
                   animate={{ 
@@ -207,151 +208,68 @@ export default function HomeSimple() {
                     ease: "easeInOut"
                   }}
                 >
-                  {/* Simple Mascot SVG */}
-                  <svg width="200" height="200" viewBox="0 0 200 200" className="drop-shadow-2xl">
-                    {/* Body */}
-                    <motion.circle 
-                      cx="100" 
-                      cy="120" 
-                      r="50" 
-                      fill="url(#mascotGradient)"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ duration: 0.8, delay: 0.6 }}
-                    />
-                    
-                    {/* Head */}
-                    <motion.circle 
-                      cx="100" 
-                      cy="70" 
-                      r="35" 
-                      fill="url(#headGradient)"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ duration: 0.8, delay: 0.8 }}
-                    />
-                    
-                    {/* Eyes */}
-                    <motion.circle 
-                      cx="90" 
-                      cy="65" 
-                      r="4" 
-                      fill="#1f2937"
-                      animate={{ scaleY: [1, 0.1, 1] }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                    />
-                    <motion.circle 
-                      cx="110" 
-                      cy="65" 
-                      r="4" 
-                      fill="#1f2937"
-                      animate={{ scaleY: [1, 0.1, 1] }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                    />
-                    
-                    {/* Smile */}
-                    <motion.path 
-                      d="M 85 75 Q 100 85 115 75" 
-                      stroke="#1f2937" 
-                      strokeWidth="3" 
-                      fill="none"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ duration: 1, delay: 1 }}
-                    />
-                    
-                    {/* Solar Panel Hat */}
-                    <motion.rect 
-                      x="75" 
-                      y="35" 
-                      width="50" 
-                      height="20" 
-                      rx="5" 
-                      fill="url(#solarGradient)"
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 35, opacity: 1 }}
-                      transition={{ duration: 0.8, delay: 1.2 }}
-                    />
-                    
-                    {/* Solar Panel Grid */}
-                    <motion.g
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.8, delay: 1.4 }}
-                    >
-                      <line x1="85" y1="35" x2="85" y2="55" stroke="#1e40af" strokeWidth="1"/>
-                      <line x1="95" y1="35" x2="95" y2="55" stroke="#1e40af" strokeWidth="1"/>
-                      <line x1="105" y1="35" x2="105" y2="55" stroke="#1e40af" strokeWidth="1"/>
-                      <line x1="115" y1="35" x2="115" y2="55" stroke="#1e40af" strokeWidth="1"/>
-                      <line x1="75" y1="42" x2="125" y2="42" stroke="#1e40af" strokeWidth="1"/>
-                      <line x1="75" y1="48" x2="125" y2="48" stroke="#1e40af" strokeWidth="1"/>
-                    </motion.g>
-                    
-                    {/* Energy Rays */}
-                    <motion.g
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                      style={{ transformOrigin: "100px 45px" }}
-                    >
-                      <motion.line 
-                        x1="100" y1="25" x2="100" y2="15" 
-                        stroke="#fbbf24" strokeWidth="3" strokeLinecap="round"
-                        animate={{ opacity: [0.5, 1, 0.5] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      />
-                      <motion.line 
-                        x1="120" y1="30" x2="127" y2="23" 
-                        stroke="#fbbf24" strokeWidth="3" strokeLinecap="round"
-                        animate={{ opacity: [0.5, 1, 0.5] }}
-                        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                      />
-                      <motion.line 
-                        x1="80" y1="30" x2="73" y2="23" 
-                        stroke="#fbbf24" strokeWidth="3" strokeLinecap="round"
-                        animate={{ opacity: [0.5, 1, 0.5] }}
-                        transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-                      />
-                    </motion.g>
-                    
-                    {/* Gradients */}
-                    <defs>
-                      <linearGradient id="mascotGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#f97316" />
-                        <stop offset="100%" stopColor="#dc2626" />
-                      </linearGradient>
-                      <linearGradient id="headGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#fb923c" />
-                        <stop offset="100%" stopColor="#f97316" />
-                      </linearGradient>
-                      <linearGradient id="solarGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#1e40af" />
-                        <stop offset="100%" stopColor="#1e3a8a" />
-                      </linearGradient>
-                    </defs>
-                  </svg>
+                  <motion.img
+                    src={isotecKaka}
+                    alt="ISOTEC Kaka - Mascote da Energia Solar"
+                    className="w-80 h-80 object-contain drop-shadow-2xl"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 1, delay: 0.6 }}
+                    whileHover={{ scale: 1.05 }}
+                  />
                 </motion.div>
                 
                 {/* Floating Energy Particles */}
-                {[...Array(6)].map((_, i) => (
+                {[...Array(8)].map((_, i) => (
                   <motion.div
                     key={i}
-                    className="absolute w-2 h-2 bg-yellow-400 rounded-full"
+                    className="absolute w-3 h-3 bg-yellow-400 rounded-full shadow-lg"
                     style={{
-                      left: `${20 + i * 15}%`,
-                      top: `${30 + (i % 2) * 40}%`,
+                      left: `${15 + i * 12}%`,
+                      top: `${25 + (i % 3) * 25}%`,
                     }}
                     animate={{
-                      y: [0, -20, 0],
+                      y: [0, -30, 0],
                       opacity: [0.3, 1, 0.3],
-                      scale: [0.8, 1.2, 0.8],
+                      scale: [0.8, 1.4, 0.8],
                     }}
                     transition={{
                       duration: 3,
                       repeat: Infinity,
-                      delay: i * 0.5,
+                      delay: i * 0.4,
                     }}
                   />
                 ))}
+
+                {/* Energy Rays around the character */}
+                <motion.div
+                  className="absolute inset-0 pointer-events-none"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                >
+                  {[...Array(6)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute w-1 bg-gradient-to-t from-yellow-400 to-orange-500 rounded-full"
+                      style={{
+                        height: '40px',
+                        left: '50%',
+                        top: '10%',
+                        transformOrigin: '50% 200px',
+                        transform: `rotate(${i * 60}deg) translateX(-50%)`,
+                      }}
+                      animate={{
+                        opacity: [0.4, 1, 0.4],
+                        scaleY: [0.8, 1.2, 0.8],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        delay: i * 0.3,
+                      }}
+                    />
+                  ))}
+                </motion.div>
               </div>
             </motion.div>
           </div>
