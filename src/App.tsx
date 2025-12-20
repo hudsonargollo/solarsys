@@ -4,7 +4,7 @@ import { initializeUTMTracking } from './lib/utm'
 import { performanceMonitor, prefetchCriticalResources } from './lib/performance'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { LazyPainel, LazyPageWrapper } from './components/LazyComponents'
-import Home from './pages/Home'
+import HomeSimple from './pages/HomeSimple'
 import SimuladorSimple from './pages/SimuladorSimple'
 import ResultadoSimple from './pages/ResultadoSimple'
 
@@ -29,7 +29,7 @@ function App() {
     <ErrorBoundary>
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<HomeSimple />} />
           <Route path="/simulador" element={<SimuladorSimple />} />
           <Route path="/resultado" element={<ResultadoSimple />} />
           <Route 
